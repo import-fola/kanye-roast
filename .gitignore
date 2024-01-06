@@ -1,5 +1,30 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+
+# local env files
+.env*.local
 .env
+
+
+#venv
 /venv
+
+# vs code
+.vscode
+
+# pycache
+/__pycache__
+__pycache__
+/__pycache__/
+
+
 /narration
 /frames/*
 !/frames/.gitkeep
+
+#gpt-eng
+.gpteng
+.gpte_consent
+run.sh
+command
+prompt
