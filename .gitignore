@@ -28,3 +28,5 @@ __pycache__
 run.sh
 command
 prompt
+
+.DS_Store
