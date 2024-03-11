@@ -3,6 +3,8 @@ import time
 from PIL import Image
 import pywinctl as gw
 from dotenv import load_dotenv
+import os
+import sys
 
 
 def find_browser_window(title_substring):
@@ -15,7 +17,7 @@ def find_browser_window(title_substring):
     windows = gw.getWindowsWithTitle(title_substring)
     return windows[0] if windows else None
 
-def capture_browser_window(window_title_substring, output_folder="frames", interval=5, image_format='png'):
+def capture_browser_window(window_title_substring, output_folder="frames", interval=30, image_format='png'):
     """
     Captures screenshots of the browser window at specified intervals.
     
@@ -24,29 +26,47 @@ def capture_browser_window(window_title_substring, output_folder="frames", inter
     :param interval: Time interval between screenshots in seconds
     :param image_format: Format of the saved image
     """
+    # Create the frames folder if it doesn't exist
+    frames_dir = os.path.join(os.getcwd(), output_folder)
+    os.makedirs(frames_dir, exist_ok=True)
+
     browser_window = find_browser_window(window_title_substring)
     if not browser_window:
         print(f"No window with title containing '{window_title_substring}' found.")
         return
+    else:
+        print("Window found:", browser_window.title)
 
     try:
         while True:
             browser_window.activate()  # Bring the browser window to the front
-            screenshot = pyautogui.screenshot(region=(
+            time.sleep(.5) 
+            region=(
                 browser_window.left,
                 browser_window.top,
                 browser_window.width,
                 browser_window.height
-            ))
+            )
+            print("Attempting to capture region:", region)
+            screenshot = pyautogui.screenshot(region=region)
             timestamp = int(time.time())
             filename = f"{output_folder}/frame.{image_format}"
             screenshot.save(filename)
-            print(f"Saved screenshot to {filename}")
+            print(f"📸 Saved screenshot to {filename}")
             time.sleep(interval)
     except KeyboardInterrupt:
-        print("Stopped capturing screenshots.")
+        print("❌ Stopped capturing screenshots.")
+    except Exception as e:
+        print(f"⚠️ An error occurred: {e}")
 
 if __name__ == "__main__":
     load_dotenv()
-    # Example usage: capture screenshots of a window with 'Google' in its title
-    capture_browser_window("Promptlib")
+    if len(sys.argv) > 1:
+        window_title_substring = sys.argv[1]
+        print("Trying to find window: ", window_title_substring)
+        capture_browser_window(window_title_substring)
+    else:
+        default_window_title = 'Promptlib'
+        print("You didn't provide a browser window title as an arg, so will use: ", default_window_title)
+        capture_browser_window(default_window_title)
+    
