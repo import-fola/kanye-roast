@@ -1,5 +1,6 @@
 # Kanye West Roasts your landing page. 
 
+Demo: https://youtu.be/RjTScgSH_Fg
 
 ## Setup
 ### Code setup
@@ -17,7 +18,7 @@ Install the dependencies:
 pip install -r requirements.txt
 ```
 
-Create a an empty `.env` file.
+Create an empty `.env` file.
 
 ### Account setup
 
