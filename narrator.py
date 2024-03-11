@@ -35,6 +35,7 @@ def play_audio(text):
     ## Model: Eleven Multilingual v2
     voice_settings=VoiceSettings(stability=0.44, similarity_boost=0.8, style=0.02, use_speaker_boost=True)
     voice_id=os.environ.get("ELEVENLABS_VOICE_ID")
+    api_key=os.environ.get("ELEVENLABS_API_KEY")
 
     audio = generate(
         text=text,
@@ -42,8 +43,8 @@ def play_audio(text):
             voice_id=voice_id,
             settings=voice_settings
         ),
-        # voice=os.environ.get("ELEVENLABS_VOICE_ID"),
-        model="eleven_multilingual_v2"
+        model="eleven_multilingual_v2",
+        api_key=api_key
     )
 
     voice_settings_str = f"stab_{voice_settings.stability}-sim_boost_{voice_settings.similarity_boost}-style_{voice_settings.style}-boost_{voice_settings.use_speaker_boost}"
@@ -107,8 +108,8 @@ def main():
 
     while True:
         # path to your image
-        image_path = os.path.join(os.getcwd(), "./frames/frame.jpg")
-
+        image_path = os.path.join(os.getcwd(), "frames/frame.png")
+        print("Image path:", image_path)
         # getting the base64 encoding
         base64_image = encode_image(image_path)
 
@@ -116,9 +117,10 @@ def main():
         print("👀 Ye is analysing the image...")
         analysis = analyse_image(base64_image, script=script)
 
-        print("🎙️ Ye says:")
+        print("🖋️ Ye wrote:")
         print(analysis)
-
+        
+        print("🎙️ Ye says:")
         play_audio(analysis)
 
         script = script + [{"role": "assistant", "content": analysis}]
